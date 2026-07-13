@@ -1,26 +1,200 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f6f7f9;
+  --surface: #ffffff;
+  --foreground: #050b18;
+  --muted: #4b5567;
+
+  --color-primary: #14b8a6;
+  --color-primary-dim: #0d8f81;
+  --color-secondary: #3b82f6;
+  --color-tertiary: #050b18;
+  --color-neutral: #0a1428;
+
+  --border-hairline: rgba(5, 11, 24, 0.1);
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-muted: var(--muted);
+  --color-primary: var(--color-primary);
+  --color-primary-dim: var(--color-primary-dim);
+  --color-secondary: var(--color-secondary);
+  --color-tertiary: var(--color-tertiary);
+  --color-neutral: var(--color-neutral);
+  --color-border-hairline: var(--border-hairline);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-geist-sans);
+  --font-display: var(--font-space-grotesk);
+  --font-label: var(--font-jetbrains-mono);
+  --font-headline: var(--font-sora);
+  --font-pixel: "Geist Pixel", var(--font-geist-sans), sans-serif;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes marquee-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-right {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-marquee-left {
+  animation: marquee-left 34s linear infinite;
+}
+
+.animate-marquee-right {
+  animation: marquee-right 40s linear infinite;
+}
+
+.animate-fade-up {
+  animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .animate-marquee-left,
+  .animate-marquee-right,
+  .animate-fade-up,
+  .starfield-layer {
+    animation: none;
+  }
+}
+
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(5, 11, 24, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(5, 11, 24, 0.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
+.clip-corner {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 22px 100%);
+}
+
+@keyframes location-pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(20, 184, 166, 0.55), 0 0 8px 5px rgba(20, 184, 166, 0.25);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(20, 184, 166, 0), 0 0 8px 5px rgba(20, 184, 166, 0.25);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(20, 184, 166, 0), 0 0 8px 5px rgba(20, 184, 166, 0.25);
+  }
+}
+
+@keyframes location-pulse-white {
+  0% {
+    transform: scale(0.95);
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.6), 0 0 8px 5px rgba(255, 255, 255, 0.3);
+  }
+  50% {
+    opacity: 0.25;
+  }
+  70% {
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: 0 0 0 10px rgba(255, 255, 255, 0), 0 0 8px 5px rgba(255, 255, 255, 0.3);
+  }
+  100% {
+    transform: scale(0.95);
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0), 0 0 8px 5px rgba(255, 255, 255, 0.3);
+  }
+}
+
+@keyframes location-clouds {
+  from {
+    transform: translateX(-40px);
+  }
+  to {
+    transform: translateX(40px);
+  }
+}
+
+@keyframes location-card-in {
+  0% {
+    filter: brightness(1) blur(10px);
+  }
+  10% {
+    filter: brightness(1) blur(16px);
+  }
+  100% {
+    filter: brightness(1) blur(0);
+  }
+}
+
+.starfield {
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(ellipse at bottom, var(--color-neutral) 0%, var(--color-tertiary) 100%);
+}
+
+.starfield-layer {
+  position: absolute;
+  inset: 0;
+  background-repeat: repeat;
+  animation: star-fall linear infinite;
+}
+
+@keyframes star-fall {
+  from {
+    background-position-y: 0;
+  }
+  to {
+    background-position-y: -1600px;
+  }
 }
