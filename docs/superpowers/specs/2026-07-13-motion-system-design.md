@@ -72,6 +72,33 @@ via `RevealGroup`.
   already-client sections are client components.
 - Respect `prefers-reduced-motion` globally.
 
+## Amendment (post code-audit, same day)
+
+A full read of the components showed several spec items **already exist**:
+hero entrance choreography (CSS `animate-fade-up` staggers), navbar
+hide/show-on-scroll with blur, VideoSection scroll-linked grow-to-fullscreen,
+ServicesShowcase pinned crossfade, ProcessSection scroll-driven timeline
+fill, FAQ smooth grid-rows open/close, and case-study hover overlays.
+
+Revised scope — implement only the real gaps, using the codebase's existing
+IntersectionObserver + CSS pattern instead of adding the `motion` dependency
+(it would duplicate what's already hand-rolled):
+
+1. **Shared reveal primitive** — `app/components/motion/Reveal.tsx` exporting
+   `useInViewOnce` hook + `Reveal` wrapper; `.reveal` / `.is-visible` CSS in
+   `globals.css` with the 0.7s / 24px / `cubic-bezier(0.16,1,0.3,1)` values.
+2. **`prefers-reduced-motion` support** (currently absent site-wide):
+   disable reveals, marquees, fade-ups via a media query.
+3. **Migrate** LogosSection and DeliverySection's hand-rolled observers to
+   the shared hook.
+4. **Add reveals** to StudioTeamSection (columns + staggered list),
+   CaseStudiesSection (heading + rows), ProcessSection heading, FaqSection
+   columns, Footer main grid.
+5. **Micro-interactions:** case-study cards lift on hover; button arrow
+   circles move diagonally (up-right, matching the arrow) on hover across
+   Hero, StudioTeam, CaseStudies, FAQ, Footer; footer service links get
+   hover states.
+
 ## Verification
 
 - Run dev server; Playwright screenshots of hero on load, mid-scroll
