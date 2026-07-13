@@ -14,15 +14,24 @@ export default function VideoSection() {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const captionRef = useRef<HTMLDivElement>(null);
   const sizeRef = useRef({ width: 0, height: 0 });
+  // Document-relative top of the container, cached on mount/resize so the
+  // scroll handler never has to call getBoundingClientRect() — that forced a
+  // synchronous layout read every frame, fighting the other scroll-linked
+  // sections' writes and causing the visible jank on the video section.
+  const topRef = useRef(0);
 
   useEffect(() => {
     let ticking = false;
 
-    function computeBaseSize() {
+    function computeLayout() {
+      const container = containerRef.current;
+      if (!container) return;
+
       const viewportWidth = window.innerWidth;
       const initialWidth = Math.min(viewportWidth - SIDE_PADDING, MAX_CARD_WIDTH);
       const initialHeight = (initialWidth * 9) / 16;
       sizeRef.current = { width: initialWidth, height: initialHeight };
+      topRef.current = container.getBoundingClientRect().top + window.scrollY;
     }
 
     // Everything below is transform/opacity-only (no width/height/border-radius
@@ -30,19 +39,17 @@ export default function VideoSection() {
     // at a new size on every scroll frame — that reflow was the source of the jank.
     function update() {
       ticking = false;
-      const container = containerRef.current;
       const card = cardRef.current;
       const button = buttonRef.current;
       const caption = captionRef.current;
-      if (!container || !card || !button || !caption) return;
+      if (!card || !button || !caption) return;
 
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
       const { width: initialWidth, height: initialHeight } = sizeRef.current;
 
-      const rect = container.getBoundingClientRect();
       const growthDistance = (GROWTH_VH / 100) * viewportHeight;
-      const scrolled = -rect.top;
+      const scrolled = window.scrollY - topRef.current;
       const progress = growthDistance > 0 ? Math.min(Math.max(scrolled / growthDistance, 0), 1) : 0;
 
       const scaleX = initialWidth / viewportWidth + (1 - initialWidth / viewportWidth) * progress;
@@ -69,11 +76,11 @@ export default function VideoSection() {
     }
 
     function onResize() {
-      computeBaseSize();
+      computeLayout();
       onScroll();
     }
 
-    computeBaseSize();
+    computeLayout();
     update();
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onResize);

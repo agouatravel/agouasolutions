@@ -95,18 +95,24 @@ const panels: Panel[] = [
 export default function ServicesShowcaseSection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const panelRefs = useRef<(HTMLDivElement | null)[]>([]);
+  // Cached document-relative top, so scroll doesn't force a layout read via
+  // getBoundingClientRect() on every frame (see VideoSection for why that jank-causing
+  // pattern was removed there too).
+  const topRef = useRef(0);
 
   useEffect(() => {
     let ticking = false;
 
-    function update() {
-      ticking = false;
+    function measure() {
       const container = containerRef.current;
       if (!container) return;
+      topRef.current = container.getBoundingClientRect().top + window.scrollY;
+    }
 
+    function update() {
+      ticking = false;
       const viewportHeight = window.innerHeight;
-      const rect = container.getBoundingClientRect();
-      const scrolled = Math.max(0, -rect.top);
+      const scrolled = Math.max(0, window.scrollY - topRef.current);
       const progress = scrolled / viewportHeight;
 
       panelRefs.current.forEach((panel, i) => {
@@ -126,12 +132,18 @@ export default function ServicesShowcaseSection() {
       }
     }
 
+    function onResize() {
+      measure();
+      onScroll();
+    }
+
+    measure();
     update();
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    window.addEventListener("resize", onResize);
     return () => {
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      window.removeEventListener("resize", onResize);
     };
   }, []);
 

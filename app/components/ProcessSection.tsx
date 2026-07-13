@@ -118,23 +118,26 @@ export default function ProcessSection() {
   const bgLineRef = useRef<HTMLDivElement>(null);
   const fillLineRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  // Marker/line geometry only changes on mount or resize, never on scroll.
+  // Caching it here (instead of calling getBoundingClientRect() on the list and
+  // all 4 markers every scroll frame) removes the layout-forcing reads that were
+  // fighting the other scroll-linked sections' writes and causing jank.
+  const geometryRef = useRef({ listTop: 0, offsets: [] as number[], first: 0, last: 0 });
 
   useEffect(() => {
     let ticking = false;
 
-    // Marker positions are re-measured on every frame (cheap: only 4 elements)
-    // instead of cached once, so the line never drifts out of sync with the
-    // actual DOM if a layout shift happens after mount.
-    function update() {
-      ticking = false;
+    function measure() {
       const list = listRef.current;
-      const fillLine = fillLineRef.current;
       const bgLine = bgLineRef.current;
+      const fillLine = fillLineRef.current;
       const markers = markerRefs.current;
-      if (!list || !fillLine || !bgLine || markers.some((m) => !m)) return;
+      if (!list || !bgLine || !fillLine || markers.some((m) => !m)) return;
 
       const listRect = list.getBoundingClientRect();
-      const offsets = markers.map((marker) => marker!.getBoundingClientRect().top - listRect.top + marker!.offsetHeight / 2);
+      const offsets = markers.map(
+        (marker) => marker!.getBoundingClientRect().top - listRect.top + marker!.offsetHeight / 2
+      );
       // Tuck the line a few px under the marker (which sits above it via z-index)
       // rather than stopping exactly at its edge, so the glow ring around the
       // active marker never leaves a visible gap before the line starts.
@@ -144,14 +147,24 @@ export default function ProcessSection() {
       const first = offsets[0] + inset;
       const last = offsets[offsets.length - 1] - inset;
 
+      geometryRef.current = { listTop: listRect.top + window.scrollY, offsets, first, last };
+
       bgLine.style.left = `${left}px`;
       bgLine.style.top = `${first}px`;
       bgLine.style.height = `${Math.max(last - first, 0)}px`;
       fillLine.style.left = `${left}px`;
       fillLine.style.top = `${first}px`;
+    }
 
+    function update() {
+      ticking = false;
+      const fillLine = fillLineRef.current;
+      const { listTop, offsets, first, last } = geometryRef.current;
+      if (!fillLine || offsets.length === 0) return;
+
+      const listRectTop = listTop - window.scrollY;
       const triggerY = window.innerHeight * TRIGGER_FRACTION;
-      const localProgress = triggerY - listRect.top;
+      const localProgress = triggerY - listRectTop;
       const filled = Math.min(Math.max(localProgress - first, 0), last - first);
       fillLine.style.height = `${filled}px`;
 
@@ -169,12 +182,18 @@ export default function ProcessSection() {
       }
     }
 
+    function onResize() {
+      measure();
+      update();
+    }
+
+    measure();
     update();
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    window.addEventListener("resize", onResize);
     return () => {
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      window.removeEventListener("resize", onResize);
     };
   }, []);
 
