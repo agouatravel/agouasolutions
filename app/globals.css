@@ -81,6 +81,36 @@ body {
   animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+@keyframes badge-cycle-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes badge-cycle-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+.badge-cycle-in {
+  animation: badge-cycle-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.badge-cycle-out {
+  animation: badge-cycle-out 0.45s ease forwards;
+}
+
 .reveal {
   opacity: 0;
   transform: translateY(24px);
@@ -106,6 +136,18 @@ body {
   .animate-fade-up,
   .starfield-layer {
     animation: none;
+  }
+
+  .badge-cycle-in {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .badge-cycle-out {
+    animation: none !important;
+    opacity: 0 !important;
+    transform: none !important;
   }
 }
 
