@@ -1,4 +1,5 @@
 import Navbar from "./components/Navbar";
+import SmoothScroll from "./components/motion/SmoothScroll";
 import Hero from "./components/Hero";
 import VideoSection from "./components/VideoSection";
 import LogosSection from "./components/LogosSection";
@@ -13,6 +14,7 @@ import Footer from "./components/Footer";
 export default function Home() {
   return (
     <>
+      <SmoothScroll />
       <Navbar />
       <main className="flex-1 pt-20">
         <Hero />
