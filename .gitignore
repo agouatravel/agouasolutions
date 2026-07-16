@@ -39,3 +39,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local tooling / scratch screenshots
+/.playwright-mcp/
+/cinematic-intro.png
+/cinematic-intro-fresh.png
+/delivery-redesigned.png
+/delivery-section.png
+/video-section-mid-scroll.png

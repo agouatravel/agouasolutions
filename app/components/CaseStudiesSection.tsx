@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Reveal from "./motion/Reveal";
 
 type CaseStudy = {
@@ -7,6 +8,7 @@ type CaseStudy = {
   monogram: string;
   accent: string;
   description: string;
+  image: string;
   featured?: boolean;
 };
 
@@ -19,6 +21,7 @@ const caseStudies: CaseStudy[] = [
     accent: "#14b8a6",
     description:
       "A virtual reality showroom letting buyers walk through Nova Realty developments before a single brick is laid.",
+    image: "/images/case-studies/nova-realty.jpg",
   },
   {
     client: "Zenith Towers",
@@ -28,6 +31,7 @@ const caseStudies: CaseStudy[] = [
     accent: "#3b82f6",
     description:
       "An interactive sales suite that turns floor plans into a live, explorable 3D experience for Zenith Towers.",
+    image: "/images/case-studies/zenith-towers.jpg",
   },
   {
     client: "Falcon Retail",
@@ -36,6 +40,7 @@ const caseStudies: CaseStudy[] = [
     monogram: "FR",
     accent: "#7c3aed",
     description: "An AR shopping experience letting Falcon Retail customers preview products in their own space.",
+    image: "/images/case-studies/falcon-retail.jpg",
   },
   {
     client: "Vertex Living",
@@ -45,6 +50,7 @@ const caseStudies: CaseStudy[] = [
     accent: "#f59e0b",
     description:
       "A live digital twin of Vertex Living's flagship property, updated in real time for remote tours.",
+    image: "/images/case-studies/vertex-living.jpg",
   },
   {
     client: "Halo Retail",
@@ -54,6 +60,7 @@ const caseStudies: CaseStudy[] = [
     accent: "#14b8a6",
     description:
       "An immersive launch activation that turned Halo Retail's flagship opening into a fully interactive event.",
+    image: "/images/case-studies/halo-retail.jpg",
     featured: true,
   },
   {
@@ -64,6 +71,7 @@ const caseStudies: CaseStudy[] = [
     accent: "#14b8a6",
     description:
       "A dedicated experience center built for Skyline Group to showcase every project in one immersive space.",
+    image: "/images/case-studies/skyline-group.jpg",
   },
   {
     client: "Cedar Exhibits",
@@ -73,6 +81,7 @@ const caseStudies: CaseStudy[] = [
     accent: "#3b82f6",
     description:
       "An immersive trade show booth that gave Cedar Exhibits a standout, fully interactive presence on the floor.",
+    image: "/images/case-studies/cedar-exhibits.jpg",
   },
   {
     client: "Orbit Expo",
@@ -82,6 +91,7 @@ const caseStudies: CaseStudy[] = [
     accent: "#7c3aed",
     description:
       "A VR training simulation platform built to onboard Orbit Expo staff faster, with zero physical setup.",
+    image: "/images/case-studies/orbit-expo.jpg",
   },
 ];
 
@@ -92,25 +102,26 @@ function CaseStudyImage({ study, stretch }: { study: CaseStudy; stretch?: boolea
         study.featured ? "border-white/10 bg-tertiary sm:col-span-2" : "border-border-hairline bg-surface"
       } ${stretch ? "h-full w-full" : study.featured ? "aspect-[16/9]" : "aspect-[4/3]"}`}
     >
-      {!study.featured && <div className="bg-grid pointer-events-none absolute inset-0 opacity-[0.06]" />}
+      <Image
+        src={study.image}
+        alt={`${study.client} — ${study.project}`}
+        fill
+        sizes="(min-width: 640px) 33vw, 50vw"
+        className="object-cover transition duration-500 ease-out group-hover:scale-105"
+      />
       <div
-        className="pointer-events-none absolute left-1/2 top-1/2 h-[70%] w-[70%] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
+        className="pointer-events-none absolute inset-0"
         style={{
-          background: `radial-gradient(circle, ${study.accent}, transparent 70%)`,
-          opacity: study.featured ? 0.35 : 0.18,
+          background: `linear-gradient(180deg, transparent 40%, ${study.accent}55 100%)`,
         }}
       />
       <span
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 select-none font-display font-semibold"
-        style={{
-          fontSize: study.featured ? "96px" : "64px",
-          color: study.featured ? "rgba(255,255,255,0.14)" : `${study.accent}26`,
-        }}
+        className="absolute right-3 top-3 flex h-9 w-9 select-none items-center justify-center rounded-full bg-black/30 font-display text-[13px] font-semibold text-white backdrop-blur-sm"
       >
         {study.monogram}
       </span>
 
-      <div className="absolute inset-0 flex translate-y-full flex-col justify-between bg-black/35 p-6 backdrop-blur-md transition-transform duration-300 ease-out group-hover:translate-y-0">
+      <div className="absolute inset-0 flex translate-y-full flex-col justify-between bg-black/45 p-6 backdrop-blur-md transition-transform duration-300 ease-out group-hover:translate-y-0">
         <p className="text-[13px] leading-relaxed text-white opacity-0 transition-opacity delay-300 duration-300 ease-out group-hover:opacity-100">
           {study.description}
         </p>

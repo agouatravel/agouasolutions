@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Reveal from "./motion/Reveal";
+import WaveDivider from "./motion/WaveDivider";
 
 const faqs = [
   {
@@ -114,7 +115,9 @@ export default function FaqSection() {
 
   return (
     <section className="relative z-10 bg-background py-20 sm:py-28">
-      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-16 px-6 lg:grid-cols-[1fr_1.4fr] lg:px-8">
+      <WaveDivider className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-16 sm:h-24" />
+
+      <div className="relative z-10 mx-auto grid max-w-6xl grid-cols-1 gap-16 px-6 lg:grid-cols-[1fr_1.4fr] lg:px-8">
         <Reveal>
           <h2
             className="text-[32px] font-semibold leading-tight text-foreground sm:text-[40px]"
@@ -196,7 +199,7 @@ export default function FaqSection() {
           </div>
         </Reveal>
 
-        <div className="lg:border-l lg:border-border-hairline lg:pl-16">
+        <div className="lg:pl-16">
           <Reveal delay={120}>
             {faqs.map((faq, i) => (
               <FaqItem

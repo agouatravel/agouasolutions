@@ -10,7 +10,6 @@ type Item = {
   bg: string;
   text: string;
   glow: string;
-  border: string;
   icon: React.ReactNode;
 };
 
@@ -22,7 +21,6 @@ const items: Item[] = [
     bg: "rgba(20,184,166,0.12)",
     text: "#0d8f81",
     glow: "rgba(20,184,166,0.14)",
-    border: "rgba(20,184,166,0.4)",
     icon: (
       <path
         d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H9l-4 4v-4H6.5A2.5 2.5 0 0 1 4 13.5v-8Z"
@@ -40,7 +38,6 @@ const items: Item[] = [
     bg: "rgba(59,130,246,0.12)",
     text: "#2563eb",
     glow: "rgba(59,130,246,0.14)",
-    border: "rgba(59,130,246,0.4)",
     icon: (
       <path
         d="M3.5 16.5 10 10l4 4 6.5-6.5M20.5 7.5v-3h-3"
@@ -58,7 +55,6 @@ const items: Item[] = [
     bg: "rgba(139,92,246,0.12)",
     text: "#7c3aed",
     glow: "rgba(139,92,246,0.14)",
-    border: "rgba(139,92,246,0.4)",
     icon: (
       <path
         d="M9 3H3v6M15 21h6v-6M3 3l7 7M21 21l-7-7"
@@ -76,7 +72,6 @@ const items: Item[] = [
     bg: "rgba(245,158,11,0.14)",
     text: "#b45309",
     glow: "rgba(245,158,11,0.16)",
-    border: "rgba(245,158,11,0.4)",
     icon: (
       <path
         d="M4 15a8 8 0 1 1 16 0M12 15l4-5"
@@ -89,11 +84,11 @@ const items: Item[] = [
   },
 ];
 
-function DeliveryCell({ item, index, visible }: { item: Item; index: number; visible: boolean }) {
-  const cellRef = useRef<HTMLDivElement>(null);
+function DeliveryCard({ item, index, visible }: { item: Item; index: number; visible: boolean }) {
+  const cardRef = useRef<HTMLDivElement>(null);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const el = cellRef.current;
+    const el = cardRef.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
     el.style.setProperty("--x", `${e.clientX - rect.left}px`);
@@ -102,17 +97,12 @@ function DeliveryCell({ item, index, visible }: { item: Item; index: number; vis
 
   return (
     <div
-      ref={cellRef}
+      ref={cardRef}
       onMouseMove={handleMouseMove}
-      className={`group relative flex flex-col items-center gap-4 overflow-hidden border-r border-b border-border-hairline px-8 py-14 text-center transition-all duration-700 ease-out hover:border-r-[var(--cell-border)] hover:border-b-[var(--cell-border)] ${
+      className={`group relative flex flex-col gap-4 overflow-hidden rounded-2xl border border-border-hairline bg-surface px-8 py-10 shadow-sm transition-all duration-700 ease-out hover:-translate-y-1 hover:shadow-lg ${
         visible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
       }`}
-      style={
-        {
-          transitionDelay: visible ? `${index * 90}ms` : "0ms",
-          "--cell-border": item.border,
-        } as React.CSSProperties
-      }
+      style={{ transitionDelay: visible ? `${index * 90}ms` : "0ms" }}
     >
       <div
         aria-hidden
@@ -123,14 +113,14 @@ function DeliveryCell({ item, index, visible }: { item: Item; index: number; vis
       />
 
       <span
-        className="font-label relative inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[11px] font-semibold uppercase tracking-widest"
+        className="font-label relative inline-flex w-fit items-center gap-2 rounded-full px-4 py-1.5 text-[11px] font-semibold uppercase tracking-widest"
         style={{ backgroundColor: item.bg, color: item.text }}
       >
         {item.badge}
       </span>
 
       <span
-        className="relative flex h-11 w-11 items-center justify-center text-foreground transition-transform duration-300 group-hover:scale-110"
+        className="relative flex h-11 w-11 items-center justify-center transition-transform duration-300 group-hover:scale-110"
         style={{ color: item.text }}
       >
         <svg viewBox="0 0 24 24" fill="none" className="h-full w-full">
@@ -145,7 +135,7 @@ function DeliveryCell({ item, index, visible }: { item: Item; index: number; vis
         {item.heading}
       </h3>
 
-      <p className="relative max-w-sm text-[15px] leading-relaxed text-muted">{item.body}</p>
+      <p className="relative text-[15px] leading-relaxed text-muted">{item.body}</p>
     </div>
   );
 }
@@ -170,14 +160,10 @@ export default function DeliverySection() {
         </h2>
       </div>
 
-      <div className="relative mx-auto mt-16 grid max-w-6xl grid-cols-1 border-t border-l border-border-hairline sm:grid-cols-2">
+      <div className="mx-auto mt-16 grid max-w-6xl grid-cols-1 gap-6 px-6 sm:grid-cols-2 lg:px-8">
         {items.map((item, i) => (
-          <DeliveryCell key={item.heading} item={item} index={i} visible={visible} />
+          <DeliveryCard key={item.heading} item={item} index={i} visible={visible} />
         ))}
-        <span
-          aria-hidden
-          className="pointer-events-none absolute left-1/2 top-1/2 hidden h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-foreground sm:block"
-        />
       </div>
     </section>
   );

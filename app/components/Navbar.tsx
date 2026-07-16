@@ -140,6 +140,7 @@ export default function Navbar() {
   const [blogOpen, setBlogOpen] = useState(false);
   const [caseStudyOpen, setCaseStudyOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
   const closeTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const blogCloseTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -180,6 +181,16 @@ export default function Navbar() {
     };
   }, [mobileOpen]);
 
+  function closeMobileMenu() {
+    setMobileOpen(false);
+    setMobileServicesOpen(false);
+  }
+
+  function toggleMobileMenu() {
+    setMobileOpen((v) => !v);
+    setMobileServicesOpen(false);
+  }
+
   const anyPanelOpen = servicesOpen || blogOpen || caseStudyOpen || mobileOpen;
 
   useEffect(() => {
@@ -211,19 +222,23 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 border-b border-border-hairline bg-background/80 backdrop-blur-md transition-transform duration-300 ease-out ${
+      className={`fixed inset-x-0 top-0 z-50 transition-transform duration-300 ease-out ${
         hidden ? "-translate-y-full" : "translate-y-0"
+      } ${
+        mobileOpen
+          ? "flex h-dvh flex-col overflow-y-auto bg-surface"
+          : "border-b border-border-hairline bg-background/80 backdrop-blur-md"
       }`}
     >
-      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
-        <Link href="/" className="flex shrink-0 items-center gap-2" onClick={() => setMobileOpen(false)}>
+      <div className="mx-auto flex h-16 w-full max-w-7xl shrink-0 items-center justify-between px-6 lg:h-20 lg:px-8">
+        <Link href="/" className="flex shrink-0 items-center gap-2" onClick={closeMobileMenu}>
           <Image
             src="/brand/agoua-logo.svg"
             alt="AGOUA Al-Samaa Co."
             width={220}
             height={51}
             priority
-            className="h-10 w-auto"
+            className="h-7 w-auto lg:h-10"
           />
         </Link>
 
@@ -237,15 +252,21 @@ export default function Navbar() {
             aria-expanded={servicesOpen}
           >
             Services
-            <svg
-              width="10"
-              height="10"
-              viewBox="0 0 10 10"
-              fill="none"
-              className={`transition-transform duration-200 ${servicesOpen ? "rotate-180" : ""}`}
+            <span
+              className={`flex h-6 w-6 items-center justify-center rounded-full border border-foreground/15 transition-transform duration-200 ${
+                servicesOpen ? "rotate-180" : ""
+              }`}
             >
-              <path d="M1 3.5L5 7.5L9 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M7 7L17 17M17 17H9M17 17V9"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </span>
           </button>
 
           <Link
@@ -294,25 +315,50 @@ export default function Navbar() {
           </Link>
         </div>
 
-        <button
-          type="button"
-          onClick={() => setMobileOpen((v) => !v)}
-          className="flex h-10 w-10 items-center justify-center rounded-full text-foreground lg:hidden"
-          aria-label="Toggle menu"
-          aria-expanded={mobileOpen}
-        >
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-            {mobileOpen ? (
+        <div className="flex items-center gap-2 lg:hidden">
+          <Link
+            href="/contact"
+            onClick={closeMobileMenu}
+            className="flex h-10 items-center rounded-full bg-tertiary px-5 text-[14px] font-medium text-white shadow-[0_6px_20px_-6px_rgba(20,184,166,0.4),0_12px_32px_-10px_rgba(59,130,246,0.3)]"
+          >
+            Contact Us
+          </Link>
+
+          <button
+            type="button"
+            onClick={toggleMobileMenu}
+            className={`relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-foreground transition-colors duration-200 ${
+              mobileOpen ? "border border-border-hairline bg-surface" : ""
+            }`}
+            aria-label="Toggle menu"
+            aria-expanded={mobileOpen}
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              className={`absolute transition-all duration-300 ${
+                mobileOpen ? "rotate-45 scale-0 opacity-0" : "rotate-0 scale-100 opacity-100"
+              }`}
+            >
+              <path d="M4 7H20" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+              <path d="M4 12H20" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+              <path d="M4 17H20" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+            </svg>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              className={`absolute transition-all duration-300 ${
+                mobileOpen ? "rotate-0 scale-100 opacity-100" : "-rotate-45 scale-0 opacity-0"
+              }`}
+            >
               <path d="M6 6L18 18M18 6L6 18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-            ) : (
-              <>
-                <path d="M4 7H20" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-                <path d="M4 12H20" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-                <path d="M4 17H20" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-              </>
-            )}
-          </svg>
-        </button>
+            </svg>
+          </button>
+        </div>
       </div>
 
       {servicesOpen && (
@@ -550,47 +596,90 @@ export default function Navbar() {
       )}
 
       {mobileOpen && (
-        <div className="border-t border-border-hairline bg-background px-6 pb-8 pt-4 lg:hidden">
-          <div className="flex flex-col">
-            <span className="font-label pb-2 pt-3 text-[11px] uppercase tracking-wide text-muted">Services</span>
-            {megaCards.map((card) => (
-              <span key={card.title} className="rounded-lg px-2 py-2.5 text-[15px] font-medium text-foreground/85">
-                {card.title}
+        <div className="animate-menu-panel flex flex-1 flex-col justify-between overflow-y-auto px-6 pb-8 pt-2 lg:hidden">
+          <nav className="flex flex-col">
+            {navLinks
+              .filter((link) => link.label === "About Us")
+              .map((link, i) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={closeMobileMenu}
+                  className="animate-menu-item py-3 text-[22px] font-bold text-foreground"
+                  style={{ animationDelay: `${i * 50}ms` }}
+                >
+                  {link.label}
+                </Link>
+              ))}
+
+            <button
+              type="button"
+              onClick={() => setMobileServicesOpen((v) => !v)}
+              className="animate-menu-item flex items-center gap-1.5 py-3 text-left text-[22px] font-bold text-foreground"
+              style={{ animationDelay: "50ms" }}
+              aria-expanded={mobileServicesOpen}
+            >
+              Services
+              <span
+                className={`flex h-6 w-6 items-center justify-center rounded-full border border-foreground/15 transition-transform duration-200 ${
+                  mobileServicesOpen ? "rotate-180" : ""
+                }`}
+              >
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M7 7L17 17M17 17H9M17 17V9"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
               </span>
-            ))}
-            <div className="my-3 h-px bg-border-hairline" />
+            </button>
+            {mobileServicesOpen && (
+              <div className="flex flex-col pb-2 pl-1">
+                {megaCards.map((card, i) => (
+                  <span
+                    key={card.title}
+                    className="animate-menu-item py-2 text-[13.5px] font-medium text-foreground/55"
+                    style={{ animationDelay: `${i * 40}ms` }}
+                  >
+                    {card.title}
+                  </span>
+                ))}
+              </div>
+            )}
+
             <Link
               href="/case-studies"
-              onClick={() => setMobileOpen(false)}
-              className="rounded-lg px-2 py-2.5 text-[15px] font-medium text-foreground/85"
+              onClick={closeMobileMenu}
+              className="animate-menu-item py-3 text-[22px] font-bold text-foreground"
+              style={{ animationDelay: "100ms" }}
             >
               Case Studies
             </Link>
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setMobileOpen(false)}
-                className="rounded-lg px-2 py-2.5 text-[15px] font-medium text-foreground/85"
-              >
-                {link.label}
-              </Link>
-            ))}
+
             <Link
               href="/blog"
-              onClick={() => setMobileOpen(false)}
-              className="rounded-lg px-2 py-2.5 text-[15px] font-medium text-foreground/85"
+              onClick={closeMobileMenu}
+              className="animate-menu-item py-3 text-[22px] font-bold text-foreground"
+              style={{ animationDelay: "150ms" }}
             >
               Blog
             </Link>
-            <Link
-              href="/contact"
-              onClick={() => setMobileOpen(false)}
-              className="mt-4 flex items-center justify-center gap-2 rounded-full bg-tertiary py-3 text-[15px] font-medium text-white shadow-[0_6px_20px_-6px_rgba(20,184,166,0.4),0_12px_32px_-10px_rgba(59,130,246,0.3)]"
-            >
-              Contact Us
-            </Link>
-          </div>
+          </nav>
+
+          <Link
+            href="/contact"
+            onClick={closeMobileMenu}
+            className="animate-menu-item group mt-6 flex items-center justify-between rounded-full bg-tertiary py-2.5 pl-6 pr-2.5 text-[16px] font-medium text-white shadow-[0_6px_20px_-6px_rgba(20,184,166,0.4),0_12px_32px_-10px_rgba(59,130,246,0.3)]"
+            style={{ animationDelay: "200ms" }}
+          >
+            Book a Consultation
+            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-tertiary">
+              <ArrowUpRight />
+            </span>
+          </Link>
         </div>
       )}
     </header>

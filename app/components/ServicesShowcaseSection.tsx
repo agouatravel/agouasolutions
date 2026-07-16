@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef } from "react";
 
 type Panel = {
@@ -7,8 +8,10 @@ type Panel = {
   headingBold: string;
   headingItalic: string;
   caption: string;
+  kicker: string;
   bg: string;
   accent: string;
+  image: string;
   icon: React.ReactNode;
 };
 
@@ -18,18 +21,20 @@ const panels: Panel[] = [
     headingBold: "Virtual Reality",
     headingItalic: "Experiences",
     caption: "Step Inside The Experience",
+    kicker: "Full Immersion",
     bg: "#04211d",
     accent: "#14b8a6",
+    image: "/images/services/vr-experiences.jpg",
     icon: (
-      <svg width="72" height="72" viewBox="0 0 24 24" fill="none">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
         <path
           d="M4 9a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v3a3 3 0 0 1-3 3h-2.2a1.5 1.5 0 0 0-1.3.75l-.5.75a1.5 1.5 0 0 1-2 0l-.5-.75A1.5 1.5 0 0 0 9.2 15H7a3 3 0 0 1-3-3V9Z"
           stroke="currentColor"
-          strokeWidth="1.2"
+          strokeWidth="1.4"
           strokeLinejoin="round"
         />
-        <circle cx="8.5" cy="10.5" r="1.3" stroke="currentColor" strokeWidth="1.2" />
-        <circle cx="15.5" cy="10.5" r="1.3" stroke="currentColor" strokeWidth="1.2" />
+        <circle cx="8.5" cy="10.5" r="1.3" stroke="currentColor" strokeWidth="1.4" />
+        <circle cx="15.5" cy="10.5" r="1.3" stroke="currentColor" strokeWidth="1.4" />
       </svg>
     ),
   },
@@ -38,17 +43,19 @@ const panels: Panel[] = [
     headingBold: "Augmented Reality",
     headingItalic: "Solutions",
     caption: "Blending Digital With Real",
+    kicker: "Real-World Overlay",
     bg: "#0b1d3a",
     accent: "#3b82f6",
+    image: "/images/services/ar-solutions.jpg",
     icon: (
-      <svg width="72" height="72" viewBox="0 0 24 24" fill="none">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
         <path
           d="M4 8V6a1 1 0 0 1 1-1h2M20 8V6a1 1 0 0 0-1-1h-2M4 16v2a1 1 0 0 0 1 1h2M20 16v2a1 1 0 0 1-1 1h-2"
           stroke="currentColor"
-          strokeWidth="1.2"
+          strokeWidth="1.4"
           strokeLinecap="round"
         />
-        <rect x="9" y="9" width="6" height="6" rx="1" stroke="currentColor" strokeWidth="1.2" />
+        <rect x="9" y="9" width="6" height="6" rx="1" stroke="currentColor" strokeWidth="1.4" />
       </svg>
     ),
   },
@@ -57,14 +64,16 @@ const panels: Panel[] = [
     headingBold: "Architectural",
     headingItalic: "Visualization",
     caption: "Visualize Before You Build",
+    kicker: "Design, Rendered Real",
     bg: "#1e1033",
     accent: "#7c3aed",
+    image: "/images/services/architectural-visualization.jpg",
     icon: (
-      <svg width="72" height="72" viewBox="0 0 24 24" fill="none">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
         <path
           d="M5 21V6l7-3 7 3v15M9 21v-6h6v6"
           stroke="currentColor"
-          strokeWidth="1.2"
+          strokeWidth="1.4"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
@@ -77,14 +86,16 @@ const panels: Panel[] = [
     headingBold: "Experience Center",
     headingItalic: "Design",
     caption: "Spaces That Sell The Vision",
+    kicker: "Built To Impress",
     bg: "#2a1a05",
     accent: "#f59e0b",
+    image: "/images/services/experience-center.jpg",
     icon: (
-      <svg width="72" height="72" viewBox="0 0 24 24" fill="none">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
         <path
           d="M4 4h7v7H4zM13 4h7v4h-7zM13 11h7v9h-7zM4 14h7v7H4z"
           stroke="currentColor"
-          strokeWidth="1.2"
+          strokeWidth="1.4"
           strokeLinejoin="round"
         />
       </svg>
@@ -95,6 +106,8 @@ const panels: Panel[] = [
 export default function ServicesShowcaseSection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const panelRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const dotRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const barRef = useRef<HTMLDivElement>(null);
   // Cached document-relative top, so scroll doesn't force a layout read via
   // getBoundingClientRect() on every frame (see VideoSection for why that jank-causing
   // pattern was removed there too).
@@ -114,6 +127,7 @@ export default function ServicesShowcaseSection() {
       const viewportHeight = window.innerHeight;
       const scrolled = Math.max(0, window.scrollY - topRef.current);
       const progress = scrolled / viewportHeight;
+      const activeIndex = Math.min(panels.length - 1, Math.round(progress));
 
       panelRefs.current.forEach((panel, i) => {
         if (!panel) return;
@@ -123,6 +137,20 @@ export default function ServicesShowcaseSection() {
         panel.style.transform = `translateY(${distance * 24}px)`;
         panel.style.pointerEvents = opacity > 0.5 ? "auto" : "none";
       });
+
+      dotRefs.current.forEach((dot, i) => {
+        if (!dot) return;
+        const active = i === activeIndex;
+        dot.style.height = active ? "28px" : "8px";
+        dot.style.opacity = active ? "1" : "0.35";
+        dot.style.background = active ? panels[activeIndex].accent : "#ffffff";
+      });
+
+      if (barRef.current) {
+        const overall = Math.min(1, Math.max(0, progress / (panels.length - 1)));
+        barRef.current.style.width = `${overall * 100}%`;
+        barRef.current.style.background = panels[activeIndex].accent;
+      }
     }
 
     function onScroll() {
@@ -156,40 +184,111 @@ export default function ServicesShowcaseSection() {
             ref={(el) => {
               panelRefs.current[i] = el;
             }}
-            className="absolute inset-0 flex flex-col justify-center px-6 will-change-transform lg:px-16"
-            style={{ background: panel.bg, opacity: i === 0 ? 1 : 0 }}
+            className="absolute inset-0 flex flex-col justify-end will-change-transform"
+            style={{ opacity: i === 0 ? 1 : 0 }}
           >
-            <div className="absolute inset-x-0 top-0 flex items-center justify-between p-6 lg:p-10">
-              <span className="font-label text-[13px] text-white/60">({panel.index})</span>
-              <span className="font-label text-[13px] text-white/60">Explore Services</span>
+            <div className="absolute inset-0 overflow-hidden">
+              <Image
+                src={panel.image}
+                alt={`${panel.headingBold} ${panel.headingItalic}`}
+                fill
+                priority={i === 0}
+                sizes="100vw"
+                className="animate-kenburns object-cover"
+              />
+              <div
+                className="pointer-events-none absolute inset-0"
+                style={{
+                  background: `linear-gradient(180deg, ${panel.bg}b3 0%, ${panel.bg}40 32%, ${panel.bg}00 52%, ${panel.bg}e6 92%)`,
+                }}
+              />
+              <div
+                className="pointer-events-none absolute inset-0 mix-blend-overlay"
+                style={{ background: `radial-gradient(120% 90% at 85% 100%, ${panel.accent}55, transparent 65%)` }}
+              />
+              <div className="grain pointer-events-none absolute inset-0 opacity-[0.05] mix-blend-overlay" />
             </div>
 
-            <div className="mx-auto w-full max-w-6xl">
+            <div className="absolute inset-x-0 top-0 z-10 flex items-center justify-between p-6 lg:p-10">
+              <span className="font-label text-[13px] tracking-wide text-white/70">
+                ({panel.index} / {String(panels.length).padStart(2, "0")})
+              </span>
+              <span className="font-label hidden text-[13px] tracking-wide text-white/70 sm:block">
+                Explore Services
+              </span>
+            </div>
+
+            <div className="relative z-10 mx-auto w-full max-w-6xl px-6 pb-16 lg:px-16 lg:pb-24">
+              <div className="flex items-center gap-3">
+                <span
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border"
+                  style={{ borderColor: `${panel.accent}66`, color: panel.accent, background: `${panel.accent}1a` }}
+                >
+                  {panel.icon}
+                </span>
+                <span
+                  className="font-label text-[12px] font-medium uppercase tracking-[0.18em]"
+                  style={{ color: panel.accent }}
+                >
+                  {panel.kicker}
+                </span>
+              </div>
+
               <h2
-                className="text-[40px] font-semibold leading-tight text-white sm:text-[56px]"
+                className="mt-5 max-w-3xl text-[42px] font-semibold leading-[0.98] text-white sm:text-[64px] lg:text-[76px]"
                 style={{ fontFamily: "var(--font-display)" }}
               >
-                {panel.headingBold} <span className="italic">{panel.headingItalic}</span>
+                {panel.headingBold}
+                <br />
+                <span className="italic" style={{ color: panel.accent }}>
+                  {panel.headingItalic}
+                </span>
               </h2>
 
-              <div className="relative mt-10 w-fit -rotate-2 rounded-2xl bg-white p-3 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.5)]">
-                <div className="relative h-[280px] w-[320px] overflow-hidden rounded-xl border border-white/10 bg-tertiary sm:h-[320px] sm:w-[380px]">
-                  <div className="bg-grid pointer-events-none absolute inset-0 opacity-[0.08]" />
-                  <div
-                    className="pointer-events-none absolute left-1/2 top-1/2 h-[70%] w-[70%] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-30 blur-3xl"
-                    style={{ background: `radial-gradient(circle, ${panel.accent}, transparent 70%)` }}
-                  />
-                  <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-white/70">
-                    {panel.icon}
+              <div className="mt-7 flex flex-wrap items-center gap-x-8 gap-y-4">
+                <p className="text-[15px] font-medium text-white/80 sm:text-[16px]">{panel.caption}</p>
+
+                <button
+                  type="button"
+                  className="group inline-flex items-center gap-2.5 rounded-full bg-white py-1.5 pl-5 pr-1.5 text-[14px] font-medium text-tertiary shadow-[0_20px_50px_-15px_rgba(0,0,0,0.6)] transition hover:pr-2"
+                >
+                  Explore Service
+                  <span
+                    className="flex h-8 w-8 items-center justify-center rounded-full text-white transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                    style={{ background: panel.accent }}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                      <path
+                        d="M7 17 17 7M9 7h8v8"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
                   </span>
-                </div>
-                <p className="mt-3 px-1 pb-1 text-[13px] font-semibold uppercase tracking-wide text-tertiary">
-                  {panel.caption}
-                </p>
+                </button>
               </div>
             </div>
           </div>
         ))}
+
+        <div className="pointer-events-none absolute inset-y-0 right-6 z-20 hidden flex-col items-center justify-center gap-2.5 lg:flex lg:right-10">
+          {panels.map((p, dotIndex) => (
+            <span
+              key={p.index}
+              ref={(el) => {
+                dotRefs.current[dotIndex] = el;
+              }}
+              className="w-[3px] rounded-full transition-[height,opacity] duration-300 ease-out"
+              style={{ height: dotIndex === 0 ? "28px" : "8px", background: "#ffffff", opacity: dotIndex === 0 ? 1 : 0.35 }}
+            />
+          ))}
+        </div>
+
+        <div className="absolute inset-x-0 bottom-0 z-20 h-[3px] bg-white/10">
+          <div ref={barRef} className="h-full transition-[width] duration-150 ease-out" style={{ width: "0%" }} />
+        </div>
       </div>
     </section>
   );
