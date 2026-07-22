@@ -7,7 +7,9 @@ const serviceLinks = [
   "Virtual Reality Experiences",
   "Augmented Reality Solutions",
   "Architectural Visualization",
+  "Virtual Content Production",
   "Experience Center Design",
+  "Digital Twins & Smart Platforms",
 ];
 
 const quickLinks = [
@@ -54,10 +56,10 @@ export default function Footer() {
             </p>
             <Link
               href="/contact"
-              className="group mt-6 inline-flex w-fit items-center gap-2 rounded-full bg-white py-1.5 pl-5 pr-1.5 text-[14px] font-medium text-tertiary transition hover:opacity-90"
+              className="group mt-6 inline-flex w-fit items-center gap-2 rounded-full bg-white py-1.5 pl-5 pr-1.5 text-[14px] font-medium text-tertiary transition-all duration-300 ease-out hover:scale-[1.04] hover:opacity-90 hover:shadow-lg active:scale-[0.97]"
             >
               Start A Project
-              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-tertiary text-white transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-tertiary text-white transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
                 <ArrowIcon />
               </span>
             </Link>
@@ -83,7 +85,10 @@ export default function Footer() {
             <ul className="mt-5 flex flex-col gap-3">
               {quickLinks.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="text-[14px] text-white/50 transition hover:text-white">
+                  <Link
+                    href={link.href}
+                    className="cursor-pointer text-[14px] text-white/50 transition hover:text-primary"
+                  >
                     {link.label}
                   </Link>
                 </li>
@@ -98,7 +103,7 @@ export default function Footer() {
             <ul className="mt-5 flex flex-col gap-3">
               {socialLinks.map((label) => (
                 <li key={label}>
-                  <a href="#" className="text-[14px] text-white/50 transition hover:text-white">
+                  <a href="#" className="cursor-pointer text-[14px] text-white/50 transition hover:text-primary">
                     {label}
                   </a>
                 </li>
@@ -108,16 +113,21 @@ export default function Footer() {
         </div>
         </Reveal>
 
-        <AgouaMarkReveal className="pointer-events-none absolute inset-x-6 bottom-0 z-0 mx-auto h-28 max-w-3xl translate-y-[85%] text-white opacity-[0.1] sm:inset-x-10 sm:h-36 sm:max-w-4xl lg:inset-x-16 lg:h-44 lg:max-w-5xl" />
+        <AgouaMarkReveal className="pointer-events-none absolute inset-x-6 bottom-0 z-0 mx-auto h-28 max-w-3xl translate-y-[45%] text-white opacity-[0.22] sm:inset-x-10 sm:h-36 sm:max-w-4xl lg:inset-x-16 lg:h-44 lg:max-w-5xl" />
         </div>
 
         <div className="relative z-10 mt-32 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-4 sm:mt-40 sm:flex-row lg:mt-48">
           <p className="text-[13px] text-white/40">
-            © {new Date().getFullYear()} AGOUA | Al-Samaa Co. All Rights Reserved.
+            © <span className="font-numeric">{new Date().getFullYear()}</span> AGOUA | Al-Samaa Co. All Rights
+            Reserved.
           </p>
           <div className="flex items-center gap-6">
-            <span className="text-[13px] text-white/40 transition hover:text-white/70">Terms of Service</span>
-            <span className="text-[13px] text-white/40 transition hover:text-white/70">Privacy Policy</span>
+            <span className="cursor-pointer text-[13px] text-white/40 transition hover:text-primary">
+              Terms of Service
+            </span>
+            <span className="cursor-pointer text-[13px] text-white/40 transition hover:text-primary">
+              Privacy Policy
+            </span>
           </div>
         </div>
       </div>

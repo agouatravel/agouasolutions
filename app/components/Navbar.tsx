@@ -301,10 +301,10 @@ export default function Navbar() {
         <div className="hidden lg:block">
           <Link
             href="/contact"
-            className="group inline-flex items-center gap-2.5 rounded-full bg-tertiary py-2.5 pl-5 pr-2.5 text-[15px] font-medium text-white shadow-[0_6px_20px_-6px_rgba(20,184,166,0.4),0_12px_32px_-10px_rgba(59,130,246,0.3)] transition hover:bg-neutral hover:shadow-[0_8px_24px_-6px_rgba(20,184,166,0.5),0_16px_40px_-10px_rgba(59,130,246,0.4)]"
+            className="group inline-flex items-center gap-2.5 rounded-full bg-tertiary py-2.5 pl-5 pr-2.5 text-[15px] font-medium text-white shadow-[0_6px_20px_-6px_rgba(20,184,166,0.4),0_12px_32px_-10px_rgba(59,130,246,0.3)] transition-all duration-300 ease-out hover:scale-[1.045] hover:bg-neutral hover:shadow-[0_8px_24px_-6px_rgba(20,184,166,0.5),0_16px_40px_-10px_rgba(59,130,246,0.4)] active:scale-[0.97]"
           >
             Contact Us
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 transition group-hover:bg-primary">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 transition-all duration-300 group-hover:-rotate-6 group-hover:bg-primary">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
                 <path
                   d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.3 1.1l-2.1 2.1z"
@@ -319,7 +319,7 @@ export default function Navbar() {
           <Link
             href="/contact"
             onClick={closeMobileMenu}
-            className="flex h-10 items-center rounded-full bg-tertiary px-5 text-[14px] font-medium text-white shadow-[0_6px_20px_-6px_rgba(20,184,166,0.4),0_12px_32px_-10px_rgba(59,130,246,0.3)]"
+            className="flex h-10 items-center rounded-full bg-tertiary px-5 text-[14px] font-medium text-white shadow-[0_6px_20px_-6px_rgba(20,184,166,0.4),0_12px_32px_-10px_rgba(59,130,246,0.3)] transition-transform duration-200 active:scale-[0.95]"
           >
             Contact Us
           </Link>
@@ -374,6 +374,13 @@ export default function Navbar() {
                 key={card.title}
                 className="group relative flex min-h-[260px] flex-col rounded-2xl bg-tertiary/[0.035] p-6 transition hover:bg-tertiary/[0.055]"
               >
+                {/* Corner brackets frame each card individually on hover,
+                    like a viewfinder locking onto it. */}
+                <span className="pointer-events-none absolute left-1.5 top-1.5 h-4 w-4 border-l-2 border-t-2 border-primary bg-[radial-gradient(circle_at_top_left,_rgba(20,184,166,0.35),_transparent_70%)] opacity-0 transition-all duration-300 ease-out group-hover:left-0.5 group-hover:top-0.5 group-hover:opacity-100" />
+                <span className="pointer-events-none absolute right-1.5 top-1.5 h-4 w-4 border-r-2 border-t-2 border-primary bg-[radial-gradient(circle_at_top_right,_rgba(20,184,166,0.35),_transparent_70%)] opacity-0 transition-all duration-300 ease-out group-hover:right-0.5 group-hover:top-0.5 group-hover:opacity-100" />
+                <span className="pointer-events-none absolute bottom-1.5 left-1.5 h-4 w-4 border-b-2 border-l-2 border-primary bg-[radial-gradient(circle_at_bottom_left,_rgba(20,184,166,0.35),_transparent_70%)] opacity-0 transition-all duration-300 ease-out group-hover:bottom-0.5 group-hover:left-0.5 group-hover:opacity-100" />
+                <span className="pointer-events-none absolute bottom-1.5 right-1.5 h-4 w-4 border-b-2 border-r-2 border-primary bg-[radial-gradient(circle_at_bottom_right,_rgba(20,184,166,0.35),_transparent_70%)] opacity-0 transition-all duration-300 ease-out group-hover:bottom-0.5 group-hover:right-0.5 group-hover:opacity-100" />
+
                 <span className="absolute right-4 top-4 text-foreground/25 transition group-hover:text-primary-dim">
                   <ArrowUpRight />
                 </span>
@@ -404,7 +411,11 @@ export default function Navbar() {
             ))}
           </div>
 
-          <div className="mt-4 rounded-2xl bg-tertiary/[0.035] p-6">
+          <div className="group relative mt-4 rounded-2xl bg-tertiary/[0.035] p-6 transition hover:bg-tertiary/[0.055]">
+            <span className="pointer-events-none absolute left-1.5 top-1.5 h-4 w-4 border-l-2 border-t-2 border-primary bg-[radial-gradient(circle_at_top_left,_rgba(20,184,166,0.35),_transparent_70%)] opacity-0 transition-all duration-300 ease-out group-hover:left-0.5 group-hover:top-0.5 group-hover:opacity-100" />
+            <span className="pointer-events-none absolute right-1.5 top-1.5 h-4 w-4 border-r-2 border-t-2 border-primary bg-[radial-gradient(circle_at_top_right,_rgba(20,184,166,0.35),_transparent_70%)] opacity-0 transition-all duration-300 ease-out group-hover:right-0.5 group-hover:top-0.5 group-hover:opacity-100" />
+            <span className="pointer-events-none absolute bottom-1.5 left-1.5 h-4 w-4 border-b-2 border-l-2 border-primary bg-[radial-gradient(circle_at_bottom_left,_rgba(20,184,166,0.35),_transparent_70%)] opacity-0 transition-all duration-300 ease-out group-hover:bottom-0.5 group-hover:left-0.5 group-hover:opacity-100" />
+            <span className="pointer-events-none absolute bottom-1.5 right-1.5 h-4 w-4 border-b-2 border-r-2 border-primary bg-[radial-gradient(circle_at_bottom_right,_rgba(20,184,166,0.35),_transparent_70%)] opacity-0 transition-all duration-300 ease-out group-hover:bottom-0.5 group-hover:right-0.5 group-hover:opacity-100" />
             <div className="flex flex-wrap items-baseline justify-between gap-2">
               <h3
                 className="text-[16px] font-semibold text-foreground"
@@ -497,7 +508,7 @@ export default function Navbar() {
                     </div>
 
                     <div className="pointer-events-none absolute left-1/2 top-1/2 z-10 origin-center -translate-x-1/2 -translate-y-1/2 scale-90 opacity-0 transition-transform duration-300 [transition-timing-function:cubic-bezier(0.74,-0.03,0.05,1.24)] group-hover:scale-100 group-hover:opacity-100">
-                      <span className="inline-flex items-center gap-2.5 rounded-full bg-tertiary py-2 pl-4 pr-2 text-[13px] font-medium text-white shadow-[0_16px_32px_-10px_rgba(5,11,24,0.5)]">
+                      <span className="inline-flex items-center gap-2.5 whitespace-nowrap rounded-full bg-tertiary py-2 pl-4 pr-2 text-[13px] font-medium text-white shadow-[0_16px_32px_-10px_rgba(5,11,24,0.5)]">
                         View Full Blog
                         <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-tertiary">
                           <ArrowUpRight />
@@ -580,7 +591,7 @@ export default function Navbar() {
                     </div>
 
                     <div className="pointer-events-none absolute left-1/2 top-1/2 z-10 origin-center -translate-x-1/2 -translate-y-1/2 scale-90 opacity-0 transition-transform duration-300 [transition-timing-function:cubic-bezier(0.74,-0.03,0.05,1.24)] group-hover:scale-100 group-hover:opacity-100">
-                      <span className="inline-flex items-center gap-2.5 rounded-full bg-tertiary py-2 pl-4 pr-2 text-[13px] font-medium text-white shadow-[0_16px_32px_-10px_rgba(5,11,24,0.5)]">
+                      <span className="inline-flex items-center gap-2.5 whitespace-nowrap rounded-full bg-tertiary py-2 pl-4 pr-2 text-[13px] font-medium text-white shadow-[0_16px_32px_-10px_rgba(5,11,24,0.5)]">
                         View Case Study
                         <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-tertiary">
                           <ArrowUpRight />
@@ -672,7 +683,7 @@ export default function Navbar() {
           <Link
             href="/contact"
             onClick={closeMobileMenu}
-            className="animate-menu-item group mt-6 flex items-center justify-between rounded-full bg-tertiary py-2.5 pl-6 pr-2.5 text-[16px] font-medium text-white shadow-[0_6px_20px_-6px_rgba(20,184,166,0.4),0_12px_32px_-10px_rgba(59,130,246,0.3)]"
+            className="animate-menu-item group mt-6 flex items-center justify-between rounded-full bg-tertiary py-2.5 pl-6 pr-2.5 text-[16px] font-medium text-white shadow-[0_6px_20px_-6px_rgba(20,184,166,0.4),0_12px_32px_-10px_rgba(59,130,246,0.3)] transition-transform duration-200 active:scale-[0.97]"
             style={{ animationDelay: "200ms" }}
           >
             Book a Consultation

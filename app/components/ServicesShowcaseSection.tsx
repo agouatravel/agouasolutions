@@ -11,7 +11,7 @@ type Panel = {
   kicker: string;
   bg: string;
   accent: string;
-  image: string;
+  image?: string;
   icon: React.ReactNode;
 };
 
@@ -63,7 +63,7 @@ const panels: Panel[] = [
     index: "03",
     headingBold: "Architectural",
     headingItalic: "Visualization",
-    caption: "Visualize Before You Build",
+    caption: "Interior, Exterior & Landscape — Visualized Before You Build",
     kicker: "Design, Rendered Real",
     bg: "#1e1033",
     accent: "#7c3aed",
@@ -101,11 +101,27 @@ const panels: Panel[] = [
       </svg>
     ),
   },
+  {
+    index: "05",
+    headingBold: "Virtual Content",
+    headingItalic: "Production",
+    caption: "Stories That Move Decisions",
+    kicker: "3D & VR Storytelling",
+    bg: "#2a0a12",
+    accent: "#e11d48",
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <rect x="2.5" y="6" width="14" height="12" rx="2.5" stroke="currentColor" strokeWidth="1.4" />
+        <path d="M16.5 10.5l5-2.7v8.4l-5-2.7" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
+      </svg>
+    ),
+  },
 ];
 
 export default function ServicesShowcaseSection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const panelRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const imageRefs = useRef<(HTMLImageElement | null)[]>([]);
   const dotRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const barRef = useRef<HTMLDivElement>(null);
   // Cached document-relative top, so scroll doesn't force a layout read via
@@ -136,6 +152,15 @@ export default function ServicesShowcaseSection() {
         panel.style.opacity = String(opacity);
         panel.style.transform = `translateY(${distance * 24}px)`;
         panel.style.pointerEvents = opacity > 0.5 ? "auto" : "none";
+        // All 5 panels are mounted at once (for the cross-fade), and each
+        // runs a continuous 16s Ken Burns zoom plus a mix-blend-overlay grain
+        // layer. Left running on every panel simultaneously regardless of
+        // visibility, that's 4-5 concurrently animating full-viewport images
+        // — pausing the ones that are essentially invisible removes most of
+        // that cost and was the main source of jank scrolling through this
+        // section.
+        const image = imageRefs.current[i];
+        if (image) image.style.animationPlayState = opacity < 0.05 ? "paused" : "running";
       });
 
       dotRefs.current.forEach((dot, i) => {
@@ -188,14 +213,35 @@ export default function ServicesShowcaseSection() {
             style={{ opacity: i === 0 ? 1 : 0 }}
           >
             <div className="absolute inset-0 overflow-hidden">
-              <Image
-                src={panel.image}
-                alt={`${panel.headingBold} ${panel.headingItalic}`}
-                fill
-                priority={i === 0}
-                sizes="100vw"
-                className="animate-kenburns object-cover"
-              />
+              {panel.image ? (
+                <Image
+                  ref={(el) => {
+                    imageRefs.current[i] = el;
+                  }}
+                  src={panel.image}
+                  alt={`${panel.headingBold} ${panel.headingItalic}`}
+                  fill
+                  priority={i === 0}
+                  sizes="100vw"
+                  className="animate-kenburns object-cover"
+                />
+              ) : (
+                <div
+                  className="absolute inset-0"
+                  style={{ background: `radial-gradient(120% 90% at 50% 30%, ${panel.accent}33, ${panel.bg} 70%)` }}
+                >
+                  <div className="bg-grid absolute inset-0 opacity-[0.12]" />
+                  <span
+                    className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.14]"
+                    style={{ color: panel.accent }}
+                  >
+                    <svg width="360" height="360" viewBox="0 0 24 24" fill="none">
+                      <rect x="2.5" y="6" width="14" height="12" rx="2.5" stroke="currentColor" strokeWidth="0.6" />
+                      <path d="M16.5 10.5l5-2.7v8.4l-5-2.7" stroke="currentColor" strokeWidth="0.6" strokeLinejoin="round" />
+                    </svg>
+                  </span>
+                </div>
+              )}
               <div
                 className="pointer-events-none absolute inset-0"
                 style={{
@@ -211,7 +257,8 @@ export default function ServicesShowcaseSection() {
 
             <div className="absolute inset-x-0 top-0 z-10 flex items-center justify-between p-6 lg:p-10">
               <span className="font-label text-[13px] tracking-wide text-white/70">
-                ({panel.index} / {String(panels.length).padStart(2, "0")})
+                (<span className="font-numeric">{panel.index}</span> /{" "}
+                <span className="font-numeric">{String(panels.length).padStart(2, "0")}</span>)
               </span>
               <span className="font-label hidden text-[13px] tracking-wide text-white/70 sm:block">
                 Explore Services
@@ -250,11 +297,11 @@ export default function ServicesShowcaseSection() {
 
                 <button
                   type="button"
-                  className="group inline-flex items-center gap-2.5 rounded-full bg-white py-1.5 pl-5 pr-1.5 text-[14px] font-medium text-tertiary shadow-[0_20px_50px_-15px_rgba(0,0,0,0.6)] transition hover:pr-2"
+                  className="group inline-flex items-center gap-2.5 rounded-full bg-white py-1.5 pl-5 pr-1.5 text-[14px] font-medium text-tertiary shadow-[0_20px_50px_-15px_rgba(0,0,0,0.6)] transition-all duration-300 ease-out hover:scale-[1.04] hover:pr-2 hover:shadow-[0_24px_60px_-15px_rgba(0,0,0,0.7)] active:scale-[0.97]"
                 >
                   Explore Service
                   <span
-                    className="flex h-8 w-8 items-center justify-center rounded-full text-white transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                    className="flex h-8 w-8 items-center justify-center rounded-full text-white transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"
                     style={{ background: panel.accent }}
                   >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none">

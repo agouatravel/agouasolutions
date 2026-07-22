@@ -30,10 +30,10 @@ export default function StudioTeamSection() {
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <button
               type="button"
-              className="group inline-flex w-fit items-center gap-2 rounded-full bg-tertiary py-1.5 pl-5 pr-1.5 text-[14px] font-medium text-white transition hover:opacity-90"
+              className="group inline-flex w-fit items-center gap-2 rounded-full bg-tertiary py-1.5 pl-5 pr-1.5 text-[14px] font-medium text-white transition-all duration-300 ease-out hover:scale-[1.04] hover:opacity-90 hover:shadow-lg active:scale-[0.97]"
             >
               Start A Project
-              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-tertiary transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-tertiary transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
                   <path
                     d="M7 17 17 7M9 7h8v8"
@@ -48,10 +48,10 @@ export default function StudioTeamSection() {
 
             <button
               type="button"
-              className="group inline-flex w-fit items-center gap-2 rounded-full border border-border-hairline bg-transparent py-1.5 pl-5 pr-1.5 text-[14px] font-medium text-foreground transition hover:border-tertiary/20 hover:bg-surface"
+              className="group inline-flex w-fit items-center gap-2 rounded-full border border-border-hairline bg-transparent py-1.5 pl-5 pr-1.5 text-[14px] font-medium text-foreground transition-all duration-300 ease-out hover:scale-[1.04] hover:border-tertiary/20 hover:bg-surface hover:shadow-md active:scale-[0.97]"
             >
               Book Consultation
-              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-tertiary text-white transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-tertiary text-white transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
                   <path
                     d="M7 17 17 7M9 7h8v8"

@@ -144,7 +144,7 @@ export default function DeliverySection() {
   const { ref: sectionRef, visible } = useInViewOnce<HTMLElement>(0.2);
 
   return (
-    <section ref={sectionRef} className="relative z-10 bg-background py-20 sm:py-28">
+    <section ref={sectionRef} className="relative z-10 bg-background pb-20 pt-8 sm:pb-28 sm:pt-12">
       <div className="mx-auto max-w-3xl px-6 text-center lg:px-8">
         <span className="font-label inline-flex items-center gap-2 rounded-full border border-border-hairline bg-surface px-4 py-1.5 text-[11px] uppercase tracking-widest text-muted">
           How We Deliver

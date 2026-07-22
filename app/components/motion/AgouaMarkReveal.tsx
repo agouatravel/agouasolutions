@@ -15,11 +15,17 @@ function seededRandom(seed: number) {
   return x - Math.floor(x);
 }
 
+// Math.sin can differ in its last few bits between the server and client JS
+// engines, so round outputs to avoid a hydration mismatch on these values.
+function round(n: number) {
+  return Math.round(n * 1000) / 1000;
+}
+
 const BLOBS = Array.from({ length: 46 }, (_, i) => ({
-  cx: seededRandom(i * 3 + 1) * 661.43,
-  cy: seededRandom(i * 3 + 2) * 153.38,
-  r: 32 + seededRandom(i * 3 + 3) * 34,
-  threshold: seededRandom(i * 7 + 11) * 0.8,
+  cx: round(seededRandom(i * 3 + 1) * 661.43),
+  cy: round(seededRandom(i * 3 + 2) * 153.38),
+  r: round(32 + seededRandom(i * 3 + 3) * 34),
+  threshold: round(seededRandom(i * 7 + 11) * 0.8),
 }));
 
 export default function AgouaMarkReveal({ className }: { className?: string }) {
@@ -31,22 +37,40 @@ export default function AgouaMarkReveal({ className }: { className?: string }) {
     if (!el) return;
 
     let ticking = false;
+    // Document-relative top, cached on mount/resize rather than read every
+    // scroll frame (matches the pattern used elsewhere in the site).
+    const topRef = { current: 0 };
 
+    function computeLayout() {
+      if (!el) return;
+      topRef.current = el.getBoundingClientRect().top + window.scrollY;
+    }
+
+    // Reveal starts once the element peeks in 85% down the viewport, and
+    // finishes a bit before the page's true max scroll (not fixed viewport
+    // fraction, and not the exact last pixel). This footer is short enough
+    // that its top can never travel past ~700px from the viewport top before
+    // the page runs out of room to scroll, so a fixed "end" threshold further
+    // up the viewport was unreachable and the mark would sit permanently
+    // half-masked. Deriving the end point from the actual max scroll instead
+    // makes the window adapt to any page length or footer height. The extra
+    // COMPLETION_BUFFER pulls that end point earlier by a chunk of a
+    // viewport, so the reveal fully completes before the literal bottom of
+    // the page — without it, anyone who stops scrolling even slightly short
+    // of the absolute last pixel (which is normal; almost nobody scrolls to
+    // the literal limit) would be left with a permanently half-masked logo.
     function update() {
       ticking = false;
       if (!el) return;
-      const rect = el.getBoundingClientRect();
       const vh = window.innerHeight;
       const scrollY = window.scrollY;
-      const maxScroll = Math.max(document.documentElement.scrollHeight - vh, 1);
-
-      const elementTop = scrollY + rect.top;
-      const enterPoint = elementTop - vh * 0.85;
-
-      const progress =
-        maxScroll > enterPoint
-          ? Math.min(1, Math.max(0, (scrollY - enterPoint) / (maxScroll - enterPoint)))
-          : 1;
+      const rectTop = topRef.current - scrollY;
+      const maxScrollY = Math.max(document.documentElement.scrollHeight - vh, 0);
+      const COMPLETION_BUFFER = vh * 0.35;
+      const endRectTop = topRef.current - Math.max(maxScrollY - COMPLETION_BUFFER, 0);
+      const startRectTop = vh * 0.85;
+      const span = Math.max(startRectTop - endRectTop, 1);
+      const progress = Math.min(1, Math.max(0, (startRectTop - rectTop) / span));
       el.style.setProperty("--p", progress.toString());
     }
 
@@ -57,22 +81,60 @@ export default function AgouaMarkReveal({ className }: { className?: string }) {
       }
     }
 
+    function onResize() {
+      computeLayout();
+      update();
+    }
+
+    computeLayout();
     update();
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    window.addEventListener("resize", onResize);
     return () => {
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      window.removeEventListener("resize", onResize);
     };
   }, []);
 
   return (
     <div
       ref={containerRef}
-      className={`agoua-mark ${className ?? ""}`.trim()}
+      className={`agoua-mark relative ${className ?? ""}`.trim()}
       style={{ "--p": 0 } as React.CSSProperties}
     >
-      <svg viewBox="0 0 661.42927 153.38342" className="h-full w-full" aria-hidden="true">
+      {/* Soft teal bloom that fades in alongside the reveal, so the mark
+          reads as a glowing brand mark materializing rather than a flat
+          gray watermark just fading in. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          opacity: "var(--p)",
+          background: "radial-gradient(60% 90% at 50% 50%, var(--color-primary), transparent 75%)",
+          filter: "blur(40px)",
+          transition: "opacity 450ms ease-out",
+        }}
+      />
+      {/* Grounded teal shadow sitting just below the text, like the mark is
+          casting soft light onto the floor beneath it. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0"
+        style={{
+          height: "45%",
+          transform: "translateY(65%)",
+          opacity: "var(--p)",
+          background: "radial-gradient(50% 100% at 50% 0%, var(--color-primary), transparent 72%)",
+          filter: "blur(28px)",
+          transition: "opacity 450ms ease-out",
+        }}
+      />
+      <svg
+        viewBox="0 0 661.42927 153.38342"
+        className="relative h-full w-full"
+        aria-hidden="true"
+        style={{ filter: "drop-shadow(0 0 24px rgba(20, 184, 166, var(--p)))" }}
+      >
         <defs>
           <mask id={maskId}>
             {BLOBS.map((b, i) => (

@@ -11,6 +11,11 @@ const faqs = [
       "We work with real estate developers, retailers, event organizers, and enterprises who want to showcase products or spaces through immersive experiences.",
   },
   {
+    question: "What services does AGOUA offer?",
+    answer:
+      "End-to-end immersive solutions — Virtual Reality and Augmented Reality experiences, architectural & 3D visualization (interior, exterior, and landscape design), interactive virtual tours and 360° panoramic experiences, digital twins and smart presentation systems, and full virtual content production, from concept to on-site delivery.",
+  },
+  {
     question: "What is your starting price?",
     answer:
       "Most VR/AR experiences start in the low five figures, scaling with scope, hardware, and the number of environments involved.",
@@ -21,9 +26,9 @@ const faqs = [
       "A focused VR showcase typically takes 4-8 weeks from kickoff to on-site launch, depending on complexity.",
   },
   {
-    question: "Do you only build VR/AR, or full installations too?",
+    question: "What makes AGOUA different?",
     answer:
-      "We handle the full stack — 3D content, software, hardware sourcing, and on-site installation — not just the software layer.",
+      "We own the entire pipeline: design, build, hardware, and on-site delivery, so nothing gets lost between vendors.",
   },
   {
     question: "Do you handle on-site hardware and setup?",
@@ -34,31 +39,6 @@ const faqs = [
     question: "How do you communicate during projects?",
     answer:
       "You get a dedicated project lead and regular milestone check-ins via call, email, or WhatsApp — whatever works best for your team.",
-  },
-  {
-    question: "What services does AGOUA offer?",
-    answer:
-      "Virtual Reality experiences, Augmented Reality solutions, architectural visualization, and full experience center design.",
-  },
-  {
-    question: "Do you work with teams in different time zones?",
-    answer:
-      "Yes, we regularly deliver for clients across the US, Europe, and the Gulf, with overlapping working hours built into every schedule.",
-  },
-  {
-    question: "Why hire AGOUA instead of a freelancer?",
-    answer:
-      "You get a full in-house team — 3D artists, developers, and installation specialists — instead of juggling multiple freelancers and hand-offs.",
-  },
-  {
-    question: "Can you upgrade an existing experience?",
-    answer:
-      "Yes, we regularly extend or refresh existing VR/AR builds with new content, hardware, or additional environments.",
-  },
-  {
-    question: "What makes AGOUA different?",
-    answer:
-      "We own the entire pipeline: design, build, hardware, and on-site delivery, so nothing gets lost between vendors.",
   },
 ];
 
@@ -162,10 +142,10 @@ export default function FaqSection() {
 
             <a
               href="/contact"
-              className="group relative mt-5 inline-flex w-fit items-center gap-2 rounded-full bg-tertiary py-1.5 pl-5 pr-1.5 text-[14px] font-medium text-white transition hover:opacity-90"
+              className="group relative mt-5 inline-flex w-fit items-center gap-2 rounded-full bg-tertiary py-1.5 pl-5 pr-1.5 text-[14px] font-medium text-white transition-all duration-300 ease-out hover:scale-[1.04] hover:opacity-90 hover:shadow-lg active:scale-[0.97]"
             >
               Book a Free Call
-              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-tertiary transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-tertiary transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
                   <path
                     d="M7 17 17 7M9 7h8v8"

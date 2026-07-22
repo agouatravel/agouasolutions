@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
-export function useInViewOnce<T extends HTMLElement>(threshold = 0.15) {
+export function useInViewOnce<T extends HTMLElement>(threshold = 0.15, rootMargin = "0px") {
   const ref = useRef<T>(null);
   const [visible, setVisible] = useState(false);
 
@@ -17,11 +17,11 @@ export function useInViewOnce<T extends HTMLElement>(threshold = 0.15) {
           observer.disconnect();
         }
       },
-      { threshold }
+      { threshold, rootMargin }
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, [threshold]);
+  }, [threshold, rootMargin]);
 
   return { ref, visible };
 }

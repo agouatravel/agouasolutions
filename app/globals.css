@@ -31,7 +31,13 @@
   --font-display: var(--font-space-grotesk);
   --font-label: var(--font-jetbrains-mono);
   --font-headline: var(--font-sora);
-  --font-pixel: "Geist Pixel", var(--font-geist-sans), sans-serif;
+  --font-pixel: var(--font-syne), sans-serif;
+  --font-numeric: var(--font-carre), monospace;
+}
+
+.font-numeric {
+  font-family: var(--font-numeric);
+  font-variant-numeric: tabular-nums;
 }
 
 body {

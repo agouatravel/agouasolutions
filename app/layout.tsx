@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Geist, Space_Grotesk, JetBrains_Mono, Sora } from "next/font/google";
+import { Geist, Space_Grotesk, JetBrains_Mono, Sora, Syne } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -25,6 +26,18 @@ const sora = Sora({
   weight: ["600", "700", "800"],
 });
 
+const syne = Syne({
+  variable: "--font-syne",
+  subsets: ["latin"],
+  weight: ["600", "700", "800"],
+});
+
+const carre = localFont({
+  src: "../public/Font/Carre-G6Vq.otf",
+  variable: "--font-carre",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "AGOUA | Al-Samaa Co. — Immersive VR, AR & Digital Experiences",
   description:
@@ -39,16 +52,8 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} ${sora.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} ${sora.variable} ${syne.variable} ${carre.variable} h-full antialiased`}
     >
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Geist+Pixel&display=swap"
-          rel="stylesheet"
-        />
-      </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
         {children}
       </body>
